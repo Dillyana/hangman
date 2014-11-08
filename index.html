@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+	 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	 <script src="scripts/main.js"></script>
+     <link href="styles/main.css" rel="stylesheet" type="text/css"/>
+<title>HangMan by Dilyana Tsanova</title>
+</head>
+
+<body>
+<div id="mainContainer">
+	<header>
+		<ul>
+			<li id="category"></li>
+			<li id="description"></li>
+		</ul>
+		<button id="restart" type="button">Restart</button>
+	</header>
+<!-- This div contains the images used to show the "hangman" -->
+	<section id="hangmanContainer">
+		<div class="mistake1"></div>
+		<div class="mistake2"></div>
+		<div class="mistake3"></div>
+		<div class="mistake4"></div>
+		<div class="mistake5"></div>
+	</section>
+
+<!-- Here the word that has to be guessed is shown -->
+	<section id="lettersContainer"></section>
+
+<!-- An input container is provided for the user to type either a letter or to try and guess the whole word -->
+	<section id="inputContainer">
+		<ul>
+			<li><input type="text" name="letters" placeholder="Letter by letter or the whole word!"/></li>
+			<li><button type="button">Try :)</button></li>
+		</ul>
+	</section>
+
+	<aside>Game rules</aside>
+	<footer></footer>
+</div>
+
+</body>
+</html>
