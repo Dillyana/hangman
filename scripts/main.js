@@ -1,21 +1,23 @@
 var HangMan = {
 	mistakesNum : 0,
-	words : {},
+	wordsData : {},
 
-	bootstrap : function() {
+	readJsonWordsFile : function() {
 		// read json with jquery ajax
-		    var word = '';
 		    $.ajax({
 		        url: 'scripts/words.json',
+		        dataType: "json",
 		        async: false
-		    }).done(function(data) {
-		        for (word in data) {
-		            wordlist.push(data[word]);
-		        }
-		    }, 'json');	
+		    }).done(function(result) {
+		    	//assing the result json object th Hangman.wordsData
+		        HangMan.wordsData = result;
+		    });	
 	},
 
 	startGame : function() {
+		
+		this.currentCategory = this.getRandomCategory();
+		debugger;
 		// 1. Choose cat. by random 
 		// 2. Choose word in cat by random
 		// 3. Show cat name and descr in UI
@@ -45,20 +47,26 @@ var HangMan = {
 
 	},
 
+	getRandomCategory: function(){
+		var randomNum = this.getRandomNum(0, this.wordsData.categories.length - 1);
+		return this.wordsData.categories[randomNum];
+	},
+
 	getRandomNum : function(min, max) {
 		// find random function once for categories, once for words
-		targetWord = wordlist[Math.floor(Math.random() * wordlist.length)];
+		return Math.floor(Math.random() * (max - min + 1)) + min;
 	},
 
 	showMistake : function() {
 		// 
 	},
 
-	evaluateUserInput : function(input, ) {
+	evaluateUserInput : function(input ) {
 
-	},
+	}
 
 };
 $(function() {
-    console.log( "ready!" );
+    HangMan.readJsonWordsFile();
+    HangMan.startGame();
 });
