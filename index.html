@@ -47,14 +47,20 @@
 	</section>
 
 <!-- Here the word that has to be guessed is shown -->
-	<section id="lettersContainer"></section>
+	<section>
+		<div id="lettersContainer" class="btn-toolbar"></div> 
+	</section>
 
 <!-- An input container is provided for the user to type either a letter or to try and guess the whole word -->
 	<section id="inputContainer">
-		<ul>
-			<li><input type="text" name="letters" placeholder="Letter by letter or the whole word!"/></li>
-			<li><button type="button" class="btn btn-default">Try :)</button></li>
-		</ul>
+		<div class="form-group">
+		  <div class="input-group">
+		    <input id="userInput" class="form-control" type="text" placeholder="Въведете буква или цялата дума">
+		    <span class="input-group-btn">
+		      <button id="submitInput" class="btn btn-default" type="button">Опитай!</button>
+		    </span>
+		  </div>
+		</div>
 	</section>
 
 	<aside>Game rules</aside>

@@ -1,3 +1,8 @@
+$(function() {
+    HangMan.readJsonWordsFile();
+    HangMan.startGame();
+});
+
 var HangMan = {
 	mistakesNum : 0,
 	wordsData : {},
@@ -20,21 +25,18 @@ var HangMan = {
 		this.showCategoryName();
 		this.currentTitle = this.getRandomTitle();
 		this.showTitleDescription();
+		this.titleWords = this.splitTitleNameToWords();
+		this.splitEachWordToChar();
+		this.showCharPlaceholders();
+		this.listenForUserInput();
+		$("#userInput").focus();
+		// debugger;
 
-		// 1. Choose cat. by random 
-		// 2. Choose word in cat by random
-		// 3. Show cat name and descr in UI
-		// 3.1 Split name to words (into arrays)
-		// 3.2 Split each word into letters (chars into arrays) 
-		// 4. Visualize placeholder for chars
-		// 5. Show first and last char of each word
-		// 6. Get user input
-		// 7. Validate user input by finding jquery inArray (for each words)
-		// 7.1 cases (if more than one word - guess word or lose game)
-		// 8. Display correct chars into possition
-		// 9. MistakeCount++ 
+
+
 		// 10. Call showmistake
-		// 11. 
+		// 11. reveal all characters either fail or win
+		// 12. 
 	},
 
 	restartGame : function() {
@@ -42,12 +44,12 @@ var HangMan = {
 		this.startGame();
 	},
 
-	gameOverWin : function() {
-
+	winGame : function() {
+		console.log("Win");
 	},
 
-	gameOverLose : function() {
-
+	loseGame : function() {
+		console.warn("Lose");
 	},
 
 	getRandomCategory: function(){
@@ -65,6 +67,7 @@ var HangMan = {
 
 	getRandomTitle: function(){
 		var randomNum = this.getRandomNum(0, this.currentCategory.titles.length - 1);
+		this.currentTitleName = this.currentCategory.titles[randomNum].name;
 		return this.currentCategory.titles[randomNum];
 	},
 
@@ -73,8 +76,111 @@ var HangMan = {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	},
 
+	splitTitleNameToWords : function() {
+		return this.currentTitle.name.split(" ");
+	},
+
+	splitEachWordToChar : function() {
+		$.each(HangMan.titleWords, function( index, word ) {
+  			HangMan.titleWords[index] = word.split("");
+		});
+	},
+
+	showCharPlaceholders : function() {
+
+		var lettersContainer = $("#lettersContainer");
+
+		$.each(HangMan.titleWords, function(index, word) {
+
+			var buttonGroup = $('<div class="btn-group">');
+			buttonGroup.appendTo(lettersContainer);
+
+			$.each(word, function(index, letter) {
+
+				var button = $('<div class="btn btn-primary disabled">');
+				var buttonText = "_";
+				if(index === 0 || index === (word.length - 1)){
+					buttonText = letter;
+				}
+				button.text(buttonText);
+				button.appendTo(buttonGroup);
+			});
+		});
+	},
+
+	listenForUserInput : function() {
+		$("#submitInput").click(function(){
+			HangMan.getUserInput();
+			$("#userInput").focus();
+		});
+
+		$("#userInput").keypress(function(evt){
+			if(evt.which === 13) {
+				HangMan.getUserInput();
+			}
+		});
+	},
+
+	getUserInput : function(){
+		this.userInput = $.trim($("#userInput").val()).toUpperCase();
+		if(this.userInput.length > 1) {
+			this.guessWholeWord();
+		} else {
+			this.checkUserInput();
+		}
+		
+		this.cleanUpInputField();
+	},
+
+	cleanUpInputField : function() {
+		$("#userInput").val("");
+	},
+
+	checkUserInput : function() {
+		var matchFound = false;
+		var letterIndex = -1;
+
+		$.each(this.titleWords, function(wordIndex, word) {
+
+			do{
+				letterIndex = $.inArray(HangMan.userInput, word, letterIndex + 1);
+				if(letterIndex > -1) {
+					matchFound = true;
+					HangMan.revealLetter(wordIndex, letterIndex);
+				}
+			} while(letterIndex > -1) 
+
+		});
+
+		if(!matchFound) {
+			this.showMistake();
+		}
+	},
+
+
+	revealLetter : function(wordIndex, letterIndex) {
+		var buttonGroup = $($(".btn-group")[wordIndex]);
+		var button = $(buttonGroup.find(".btn")[letterIndex]);
+		button.text(this.userInput);
+	},
+
+	guessWholeWord : function() {
+		if(this.userInput === this.currentTitleName) {
+			this.winGame();
+		} else {
+			this.loseGame();
+		}
+	},
+
 	showMistake : function() {
-		// 
+		this.mistakesNum++;
+
+		console.warn( this.mistakesNum + " mistake");
+
+		if(this.mistakesNum === 5) {
+			this.loseGame();
+		}
+		
 	},
 
 	evaluateUserInput : function(input ) {
@@ -82,7 +188,4 @@ var HangMan = {
 	}
 
 };
-$(function() {
-    HangMan.readJsonWordsFile();
-    HangMan.startGame();
-});
+
