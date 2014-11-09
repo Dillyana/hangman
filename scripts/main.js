@@ -5,7 +5,7 @@ var HangMan = {
 	readJsonWordsFile : function() {
 		// read json with jquery ajax
 		    $.ajax({
-		        url: 'scripts/words.json',
+		        url: 'data/words.json',
 		        dataType: "json",
 		        async: false
 		    }).done(function(result) {
@@ -17,7 +17,10 @@ var HangMan = {
 	startGame : function() {
 		
 		this.currentCategory = this.getRandomCategory();
-		debugger;
+		this.showCategoryName();
+		this.currentTitle = this.getRandomTitle();
+		this.showTitleDescription();
+
 		// 1. Choose cat. by random 
 		// 2. Choose word in cat by random
 		// 3. Show cat name and descr in UI
@@ -50,6 +53,19 @@ var HangMan = {
 	getRandomCategory: function(){
 		var randomNum = this.getRandomNum(0, this.wordsData.categories.length - 1);
 		return this.wordsData.categories[randomNum];
+	},
+
+	showCategoryName : function() {
+		$("#categoryName").text(this.currentCategory.name);
+	},
+
+	showTitleDescription : function() {
+		$("#description").text(this.currentTitle.description);
+	},
+
+	getRandomTitle: function(){
+		var randomNum = this.getRandomNum(0, this.currentCategory.titles.length - 1);
+		return this.currentCategory.titles[randomNum];
 	},
 
 	getRandomNum : function(min, max) {
