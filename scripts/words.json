@@ -5,15 +5,15 @@
 			"words": [
 				{
 					"name": "SOFIA",
-					"description": "The largest city in the oldes country in Europe"
+					"description": "The largest city in the oldest country in Europe."
 				},
 				{
 					"name": "PLOVDIV",
-					"description": "Bla-bla"
+					"description": "The second largest city in the oldest country in Europe."
 				},
 				{
-					"name": "STARA ZAGORA",
-					"description": "Bla-bla"
+					"name": "BURGAS",
+					"description": "Sea, sun, sand..."
 				}
 
 			]
@@ -22,14 +22,17 @@
 			"name": "Animals",
 			"words": [
 				{
-					"name": "Juotno edno",
-					"description": "The largest city in the oldes country in Europe"
+					"name": "PANDA",
+					"description": "The cutest animal in China."
 				},
 				{
-					"name": "Juotno 2",
-					"description": "Bla-bla"
+					"name": "DOLPHIN",
+					"description": "One of the smartest animals in the sea."
+				},
+				{
+					"name": "KOALA",
+					"description": "The cutest animal in Australia."
 				}
-
 			]
 		}
 
