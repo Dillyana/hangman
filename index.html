@@ -3,8 +3,10 @@
 <head>
 <meta charset="UTF-8">
 	 <script src="scripts/jquery.min.js"></script>
-	 <script src="scripts/main.js"></script>
+	 <link href="styles/bootstrap.min.css" rel="stylesheet" type="text/css"/>
      <link href="styles/main.css" rel="stylesheet" type="text/css"/>
+     <script src="scripts/bootstrap.min.js"></script>
+     <script src="scripts/main.js"></script>
 <title>HangMan by Dilyana Tsanova</title>
 </head>
 
@@ -15,7 +17,7 @@
 			<li id="category"></li>
 			<li id="description"></li>
 		</ul>
-		<button id="restart" type="button">Restart</button>
+		<button id="restart" type="button" class="btn btn-info">Restart</button>
 	</header>
 <!-- This div contains the images used to show the "hangman" -->
 	<section id="hangmanContainer">
@@ -33,7 +35,7 @@
 	<section id="inputContainer">
 		<ul>
 			<li><input type="text" name="letters" placeholder="Letter by letter or the whole word!"/></li>
-			<li><button type="button">Try :)</button></li>
+			<li><button type="button" class="btn btn-default">Try :)</button></li>
 		</ul>
 	</section>
 
