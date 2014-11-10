@@ -14,7 +14,7 @@ var HangMan = {
 		        dataType: "json",
 		        async: false
 		    }).done(function(result) {
-		    	//assing the result json object th Hangman.wordsData
+		    	//adding the result json object th Hangman.wordsData
 		        HangMan.wordsData = result;
 		    });	
 	},
@@ -30,9 +30,8 @@ var HangMan = {
 		this.showCharPlaceholders();
 		this.listenForUserInput();
 		$("#userInput").focus();
+
 		// debugger;
-
-
 
 		// 10. Call showmistake
 		// 11. reveal all characters either fail or win
@@ -40,39 +39,47 @@ var HangMan = {
 	},
 
 	restartGame : function() {
+		$("#lettersContainer").html("");
+		$(".mistakeImg").hide();
 		this.mistakesNum = 0;
 		this.startGame();
 	},
 
 	winGame : function() {
-		console.log("Win");
+		if() {
+
+		}
+		var dialogBox = $('<div class="modal-body">');
+		dialogBox.text("Честито!");
+		dialogBox.appendTo("#dialogBox");
+
 	},
 
 	loseGame : function() {
-		console.warn("Lose");
+		
+		this.restartGame();
 	},
-
+// gets category in a random manner (there are only two categories but it will work for n cat.)
 	getRandomCategory: function(){
 		var randomNum = this.getRandomNum(0, this.wordsData.categories.length - 1);
 		return this.wordsData.categories[randomNum];
 	},
-
+// shows the randomly chosen category name to the user
 	showCategoryName : function() {
 		$("#categoryName").text(this.currentCategory.name);
 	},
-
-	showTitleDescription : function() {
-		$("#description").text(this.currentTitle.description);
-	},
-
+// gets a random name from the title object of the current category
 	getRandomTitle: function(){
 		var randomNum = this.getRandomNum(0, this.currentCategory.titles.length - 1);
 		this.currentTitleName = this.currentCategory.titles[randomNum].name;
 		return this.currentCategory.titles[randomNum];
 	},
-
+// shows the desciption of the name in the current title object
+	showTitleDescription : function() {
+		$("#description").text(this.currentTitle.description);
+	},
+// random function which is used to find first - radnom category, and then random title
 	getRandomNum : function(min, max) {
-		// find random function once for categories, once for words
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	},
 
@@ -175,17 +182,11 @@ var HangMan = {
 	showMistake : function() {
 		this.mistakesNum++;
 
-		console.warn( this.mistakesNum + " mistake");
+		$("#mistake" + this.mistakesNum).show();
 
 		if(this.mistakesNum === 5) {
 			this.loseGame();
-		}
-		
+		}	
 	},
-
-	evaluateUserInput : function(input ) {
-
-	}
-
 };
 

@@ -7,3 +7,19 @@
 .btn {
     font-family: "Courier New",Courier,monospace;
 }
+#hangmanContainer {
+	width: 420px;
+	height: 467px;
+	margin: 0 auto;
+	display: block;
+	position: relative;
+}
+.mistakeImg {
+	width: 420px;
+	height: 467px;
+	position: absolute;
+	display: none;
+	left: 0px;
+	top: 0px;
+
+} 

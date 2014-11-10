@@ -30,20 +30,16 @@
 		        </div>
 	     	</div>
 		</div>
-
-		<ul>
-			<li id="category"></li>
-			<li id="description"></li>
-		</ul>
-		<button id="restart" type="button" class="btn btn-info">Restart</button>
 	</header>
 <!-- This div contains the images used to show the "hangman" -->
-	<section id="hangmanContainer">
-		<div class="mistake1"></div>
-		<div class="mistake2"></div>
-		<div class="mistake3"></div>
-		<div class="mistake4"></div>
-		<div class="mistake5"></div>
+	<section>
+		<div id="hangmanContainer">
+			<div id="mistake1" class="mistakeImg"><img src="images/mistake1.png" border="0" width="420" height="467" /></div>
+			<div id="mistake2" class="mistakeImg"><img src="images/mistake2.png" border="0" width="420" height="467" /></div>
+			<div id="mistake3" class="mistakeImg"><img src="images/mistake3.png" border="0" width="420" height="467" /></div>
+			<div id="mistake4" class="mistakeImg"><img src="images/mistake4.png" border="0" width="420" height="467" /></div>
+			<div id="mistake5" class="mistakeImg"><img src="images/mistake5.png" border="0" width="420" height="467" /></div>
+		</div>
 	</section>
 
 <!-- Here the word that has to be guessed is shown -->
@@ -62,7 +58,21 @@
 		  </div>
 		</div>
 	</section>
-
+	<section id="dialogBox">
+		<div class="modal">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		     
+		      <div class="modal-body">
+		        <p>Играта свърши</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">ОК</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</section>
 	<aside>Game rules</aside>
 	<footer></footer>
 </div>
