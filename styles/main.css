@@ -23,3 +23,6 @@
 	top: 0px;
 
 } 
+#dialogBox {
+	display: none;
+}

@@ -1,14 +1,47 @@
 $(function() {
-    HangMan.readJsonWordsFile();
     HangMan.startGame();
 });
 
 var HangMan = {
-	mistakesNum : 0,
-	wordsData : {},
+	
+	totalLettersToGuess : 0,
+	mistakesCounter : 0,
+	wordsData : null,
+	currentCategory : null,
+	currentTitle : null,
+	currentTitleName : null,
+	titleWords : null,
+	userInput : null,
+
+	
+
+	startGame : function() {
+		console.log("start game");
+		this.readJsonWordsFile();
+		this.totalLettersToGuess = 0;
+		this.initDialog();
+		this.currentCategory = this.getRandomCategory();
+		this.showCategoryName();
+		this.currentTitle = this.getRandomTitle();
+		this.showTitleDescription();
+		this.titleWords = this.splitTitleNameToWords();
+		this.splitEachWordToChar();
+		this.showLetterPlaceholders();
+		this.listenForUserInput();
+		$("#userInput").focus(); 
+	},
+
+	restartGame : function() {
+		$("#lettersContainer").html("");
+		$(".mistakeImg").hide();
+		this.mistakesCounter = 0;
+		this.totalLettersToGuess = 0;
+		this.startGame();
+	},
 
 	readJsonWordsFile : function() {
 		// read json with jquery ajax
+		if(!this.wordsData){
 		    $.ajax({
 		        url: 'data/words.json',
 		        dataType: "json",
@@ -17,45 +50,45 @@ var HangMan = {
 		    	//adding the result json object th Hangman.wordsData
 		        HangMan.wordsData = result;
 		    });	
+		}
 	},
 
-	startGame : function() {
-		
-		this.currentCategory = this.getRandomCategory();
-		this.showCategoryName();
-		this.currentTitle = this.getRandomTitle();
-		this.showTitleDescription();
-		this.titleWords = this.splitTitleNameToWords();
-		this.splitEachWordToChar();
-		this.showCharPlaceholders();
-		this.listenForUserInput();
-		$("#userInput").focus();
-
-		// debugger;
-
-		// 10. Call showmistake
-		// 11. reveal all characters either fail or win
-		// 12. 
+	initDialog : function() {
+		this.dialogBox = $('#dialogBox');
+		this.dialogBox.modal({
+		  show: false
+		});
+		this.dialogBox.on('hide.bs.modal', function () {
+			HangMan.restartGame();
+		});
+		$('#dialogButton').on('click', function () {
+		    HangMan.dialogBox.modal("hide");
+		});
 	},
 
-	restartGame : function() {
-		$("#lettersContainer").html("");
-		$(".mistakeImg").hide();
-		this.mistakesNum = 0;
-		this.startGame();
+	fillDialogContent : function(titleHtml, bodyHtml) {
+		this.dialogBox.find("#dialogTitle").html(titleHtml);
+		this.dialogBox.find("#dialogBody").html(bodyHtml);
 	},
+
+	
 
 	winGame : function() {
-		if() {
+		console.log("win game");
+		var title = "<h2>win game</h2>";
+		var body = "<h4>win game</h4>";
+		this.fillDialogContent(title, body);
+		this.dialogBox.modal("show");
 
-		}
-		var dialogBox = $('<div class="modal-body">');
-		dialogBox.text("Честито!");
-		dialogBox.appendTo("#dialogBox");
-
+		this.restartGame();
 	},
 
 	loseGame : function() {
+		console.log("lose game");
+		var title = "<h2>lose game</h2>";
+		var body = "<h4>lose game</h4>";
+		this.fillDialogContent(title, body);
+		this.dialogBox.modal("show");
 		
 		this.restartGame();
 	},
@@ -82,18 +115,19 @@ var HangMan = {
 	getRandomNum : function(min, max) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	},
-
+// splits the name into separates words (because the name in the title object could be two or more words)
 	splitTitleNameToWords : function() {
 		return this.currentTitle.name.split(" ");
 	},
-
+// splits the words into characters in arrays
 	splitEachWordToChar : function() {
 		$.each(HangMan.titleWords, function( index, word ) {
   			HangMan.titleWords[index] = word.split("");
 		});
 	},
-
-	showCharPlaceholders : function() {
+// shows the placeholders for the characters using jQuery to create the placeholders(buttons) in the 
+// #lettersContainer. 
+	showLetterPlaceholders : function() {
 
 		var lettersContainer = $("#lettersContainer");
 
@@ -111,7 +145,12 @@ var HangMan = {
 				}
 				button.text(buttonText);
 				button.appendTo(buttonGroup);
+				// 
+				HangMan.totalLettersToGuess++;
 			});
+			// 
+			HangMan.totalLettersToGuess -= 2;
+
 		});
 	},
 
@@ -154,16 +193,26 @@ var HangMan = {
 				if(letterIndex > -1) {
 					matchFound = true;
 					HangMan.revealLetter(wordIndex, letterIndex);
+					debugger;
+					HangMan.totalLettersToGuess--;
 				}
 			} while(letterIndex > -1) 
 
 		});
 
-		if(!matchFound) {
+		if(matchFound) {
+			this.checkLettersLeft();
+		} else {
 			this.showMistake();
 		}
 	},
 
+	checkLettersLeft : function() {
+		console.log("letter left " + this.totalLettersToGuess);
+		if(this.totalLettersToGuess === 0) {
+			this.winGame();
+		}
+	},
 
 	revealLetter : function(wordIndex, letterIndex) {
 		var buttonGroup = $($(".btn-group")[wordIndex]);
@@ -180,11 +229,11 @@ var HangMan = {
 	},
 
 	showMistake : function() {
-		this.mistakesNum++;
+		this.mistakesCounter++;
+		console.warn("mistake count " + this.mistakesCounter);
+		$("#mistake" + this.mistakesCounter).show();
 
-		$("#mistake" + this.mistakesNum).show();
-
-		if(this.mistakesNum === 5) {
+		if(this.mistakesCounter === 5) {
 			this.loseGame();
 		}	
 	},
