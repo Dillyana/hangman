@@ -8,15 +8,21 @@
     font-family: "Courier New",Courier,monospace;
 }
 #hangmanContainer {
-	width: 420px;
-	height: 467px;
+/*	width: 420px;
+	height: 467px;*/
+	max-width: inherit;
+	min-width: 420px;
+    height: auto;
+    min-height: 467px:;
 	margin: 0 auto;
 	display: block;
 	position: relative;
 }
 .mistakeImg {
-	width: 420px;
-	height: 467px;
+	/*width: 420px;
+	height: 467px;*/
+	max-width: inherit;
+    height: auto;
 	position: absolute;
 	display: none;
 	left: 0px;
@@ -25,4 +31,15 @@
 } 
 #dialogBox {
 	display: none;
+}
+p {
+	font-size: 16px;
+}
+.container {
+	border: solid 1px black;
+	padding: 0 30px;
+
+}
+#lettersContainer {
+	padding: 10px 0;
 }

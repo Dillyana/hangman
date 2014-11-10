@@ -3,7 +3,7 @@ $(function() {
 });
 
 var HangMan = {
-	
+
 	totalLettersToGuess : 0,
 	mistakesCounter : 0,
 	wordsData : null,
@@ -14,7 +14,7 @@ var HangMan = {
 	userInput : null,
 
 	
-
+// this fuction starts the game by calling every moethod and var that is necessary for the game to begin
 	startGame : function() {
 		console.log("start game");
 		this.readJsonWordsFile();
@@ -31,6 +31,8 @@ var HangMan = {
 		$("#userInput").focus(); 
 	},
 
+	// restart of the game is done by clearing the containers of lettlers of the previous word; 
+// setting the mistakeCounter to zero as well as the counter of the letters guessed and calls the startGame function
 	restartGame : function() {
 		$("#lettersContainer").html("");
 		$(".mistakeImg").hide();
@@ -51,13 +53,35 @@ var HangMan = {
 		        HangMan.wordsData = result;
 		    });	
 		}
-	},
+	},	
+// calls a dialog box which fills with the vars title and body and then restarts the game
+	winGame : function() {
+		console.log("win game");
+		var title = "<h2>Честито!</h2>";
+		var body = "<h4>Вие спечелихте играта! Вашата дума беше: </h4>";
+		this.fillDialogContent(title, body);
+		this.dialogBox.modal("show");
 
+		this.restartGame();
+	},
+// calls a dialog box which fills with the vars title and body and then restarts the game
+	loseGame : function() {
+		console.log("lose game");
+		var title = "<h2>:(</h2>";
+		var body = "<h4>Вие загубихте играта! Вашата дума беше: </h4>";
+		this.fillDialogContent(title, body);
+		this.dialogBox.modal("show");
+		
+		this.restartGame();
+	},
+// function concerning the initial set up of the dialog box
 	initDialog : function() {
 		this.dialogBox = $('#dialogBox');
+		// initial show of the dialog box is set to false
 		this.dialogBox.modal({
 		  show: false
 		});
+		// these two functions tell the dialog box twhen to hide
 		this.dialogBox.on('hide.bs.modal', function () {
 			HangMan.restartGame();
 		});
@@ -65,32 +89,10 @@ var HangMan = {
 		    HangMan.dialogBox.modal("hide");
 		});
 	},
-
+// tells the dialog box what to use as title and body
 	fillDialogContent : function(titleHtml, bodyHtml) {
 		this.dialogBox.find("#dialogTitle").html(titleHtml);
 		this.dialogBox.find("#dialogBody").html(bodyHtml);
-	},
-
-	
-
-	winGame : function() {
-		console.log("win game");
-		var title = "<h2>win game</h2>";
-		var body = "<h4>win game</h4>";
-		this.fillDialogContent(title, body);
-		this.dialogBox.modal("show");
-
-		this.restartGame();
-	},
-
-	loseGame : function() {
-		console.log("lose game");
-		var title = "<h2>lose game</h2>";
-		var body = "<h4>lose game</h4>";
-		this.fillDialogContent(title, body);
-		this.dialogBox.modal("show");
-		
-		this.restartGame();
 	},
 // gets category in a random manner (there are only two categories but it will work for n cat.)
 	getRandomCategory: function(){
@@ -130,14 +132,15 @@ var HangMan = {
 	showLetterPlaceholders : function() {
 
 		var lettersContainer = $("#lettersContainer");
-
+		// iterates over the words(because it could be more then one) in the name 
 		$.each(HangMan.titleWords, function(index, word) {
-
+			// appends buttons to the #lettersContainer
 			var buttonGroup = $('<div class="btn-group">');
 			buttonGroup.appendTo(lettersContainer);
-
+			// iterates over each letter of the word 
 			$.each(word, function(index, letter) {
-
+				// setting initial value of the placeholder button to "_" and if it is the
+				// first letter or the last, it shows the letter instead
 				var button = $('<div class="btn btn-primary disabled">');
 				var buttonText = "_";
 				if(index === 0 || index === (word.length - 1)){
@@ -192,9 +195,8 @@ var HangMan = {
 				letterIndex = $.inArray(HangMan.userInput, word, letterIndex + 1);
 				if(letterIndex > -1) {
 					matchFound = true;
-					HangMan.revealLetter(wordIndex, letterIndex);
-					debugger;
 					HangMan.totalLettersToGuess--;
+					HangMan.revealLetter(wordIndex, letterIndex);
 				}
 			} while(letterIndex > -1) 
 
