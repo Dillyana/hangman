@@ -31,21 +31,11 @@ var HangMan = {
 		$("#userInput").focus(); 
 	},
 
-	// restart of the game is done by clearing the containers of lettlers of the previous word; 
-// setting the mistakeCounter to zero as well as the counter of the letters guessed and calls the startGame function
-	restartGame : function() {
-		$("#lettersContainer").html("");
-		$(".mistakeImg").hide();
-		this.mistakesCounter = 0;
-		this.totalLettersToGuess = 0;
-		this.startGame();
-	},
-
 	readJsonWordsFile : function() {
 		// read json with jquery ajax
 		if(!this.wordsData){
 		    $.ajax({
-		        url: 'data/words.json',
+		        url: "data/words.json",
 		        dataType: "json",
 		        async: false
 		    }).done(function(result) {
@@ -54,6 +44,15 @@ var HangMan = {
 		    });	
 		}
 	},	
+// restart of the game is done by clearing the containers of lettlers of the previous word; 
+// setting the mistakeCounter to zero as well as the counter of the letters guessed and calls the startGame function
+	restartGame : function() {
+		$("#lettersContainer").html("");
+		$(".mistakeImg").hide();
+		this.mistakesCounter = 0;
+		this.totalLettersToGuess = 0;
+		this.startGame();
+	},
 // calls a dialog box which fills with the vars title and body and then restarts the game
 	winGame : function() {
 		console.log("win game");
@@ -76,16 +75,16 @@ var HangMan = {
 	},
 // function concerning the initial set up of the dialog box
 	initDialog : function() {
-		this.dialogBox = $('#dialogBox');
+		this.dialogBox = $("#dialogBox");
 		// initial show of the dialog box is set to false
 		this.dialogBox.modal({
 		  show: false
 		});
 		// these two functions tell the dialog box twhen to hide
-		this.dialogBox.on('hide.bs.modal', function () {
+		this.dialogBox.on("hide.bs.modal", function () {
 			HangMan.restartGame();
 		});
-		$('#dialogButton').on('click', function () {
+		$("#dialogButton").on("click", function () {
 		    HangMan.dialogBox.modal("hide");
 		});
 	},
@@ -148,15 +147,17 @@ var HangMan = {
 				}
 				button.text(buttonText);
 				button.appendTo(buttonGroup);
-				// 
+				// keeps count of every letter that we iterate so to know how many letter we have to guess 
+				// to win 
 				HangMan.totalLettersToGuess++;
 			});
-			// 
+			// extracts 2 letters since we have initially provided the first and the last(two letters)
 			HangMan.totalLettersToGuess -= 2;
 
 		});
 	},
-
+// listener function that watches for either the event of pressing the Enter key or the button submitInput,
+// and focuses back to the input field 
 	listenForUserInput : function() {
 		$("#submitInput").click(function(){
 			HangMan.getUserInput();
@@ -169,7 +170,9 @@ var HangMan = {
 			}
 		});
 	},
-
+// gets the input of the user and strips it of any spaces and converts them to upper case letters
+// and then checks of the input is longer than 1 letter, if it is, checks guessWholeWord()
+// else checks checkUserInput(); then clears the input field
 	getUserInput : function(){
 		this.userInput = $.trim($("#userInput").val()).toUpperCase();
 		if(this.userInput.length > 1) {
@@ -180,48 +183,47 @@ var HangMan = {
 		
 		this.cleanUpInputField();
 	},
-
+// function that takes care of clearing up the input field by setting the value to empty string
 	cleanUpInputField : function() {
 		$("#userInput").val("");
 	},
 
 	checkUserInput : function() {
 		var matchFound = false;
-		var letterIndex = -1;
+		var letterIndex = 0;
 
 		$.each(this.titleWords, function(wordIndex, word) {
-
+			// checks at least once the user input in the array of letters, starting from the second
 			do{
 				letterIndex = $.inArray(HangMan.userInput, word, letterIndex + 1);
-				if(letterIndex > -1) {
+				if(letterIndex > 0) {
 					matchFound = true;
 					HangMan.totalLettersToGuess--;
 					HangMan.revealLetter(wordIndex, letterIndex);
 				}
-			} while(letterIndex > -1) 
-
+			} while(letterIndex > 0) 
 		});
-
-		if(matchFound) {
+		// if a match is found, checks how many letters to guess are left, else shows mistake
+		if(matchFound === true) {
 			this.checkLettersLeft();
 		} else {
 			this.showMistake();
 		}
 	},
-
+// checks how many letters to guess are left, if the value is equal to 0, than we have win game
 	checkLettersLeft : function() {
 		console.log("letter left " + this.totalLettersToGuess);
 		if(this.totalLettersToGuess === 0) {
 			this.winGame();
 		}
 	},
-
+// reveals the letters in the correct index field and uses the user input
 	revealLetter : function(wordIndex, letterIndex) {
 		var buttonGroup = $($(".btn-group")[wordIndex]);
 		var button = $(buttonGroup.find(".btn")[letterIndex]);
 		button.text(this.userInput);
 	},
-
+// checks if the user input(which from getUserInput() we know is more than one letter) is equal to the current name
 	guessWholeWord : function() {
 		if(this.userInput === this.currentTitleName) {
 			this.winGame();
@@ -229,7 +231,8 @@ var HangMan = {
 			this.loseGame();
 		}
 	},
-
+// this function takes care of counting the mistakes and showing the hangMan
+// and when that counter reaches 5 - lose game
 	showMistake : function() {
 		this.mistakesCounter++;
 		console.warn("mistake count " + this.mistakesCounter);
